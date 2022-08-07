@@ -139,9 +139,7 @@ optimizer_config = dict(
 
 model = dict(
     backbone=dict(patch_size=(2, 4, 4), window_size=(16, 7, 7), drop_path_rate=0.4),
-    cls_head=dict(num_classes=174),
+    cls_head=dict(num_classes=2),
     test_cfg=dict(max_testing_views=2),
-    train_cfg=dict(
-        blending=dict(type="LabelSmoothing", num_classes=174, smoothing=0.1)
-    ),
+    train_cfg=dict(blending=dict(type="LabelSmoothing", num_classes=2, smoothing=0.1)),
 )
