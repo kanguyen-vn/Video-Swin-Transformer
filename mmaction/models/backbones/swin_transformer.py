@@ -1,3 +1,4 @@
+# fmt: off
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -573,7 +574,7 @@ class SwinTransformer3D(nn.Module):
                 debugging infomation.
         """
         checkpoint = torch.load(self.pretrained, map_location='cpu')
-        state_dict = checkpoint['model']
+        state_dict = checkpoint['state_dict']
 
         # delete relative_position_index since we always re-init it
         relative_position_index_keys = [k for k in state_dict.keys() if "relative_position_index" in k]
@@ -666,4 +667,3 @@ class SwinTransformer3D(nn.Module):
         """Convert the model into training mode while keep layers freezed."""
         super(SwinTransformer3D, self).train(mode)
         self._freeze_stages()
-
