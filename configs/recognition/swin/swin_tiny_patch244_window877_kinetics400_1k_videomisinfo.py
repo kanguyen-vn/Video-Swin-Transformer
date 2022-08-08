@@ -1,6 +1,7 @@
+# fmt: off
 _base_ = ["../../_base_/models/swin/swin_tiny.py", "../../_base_/default_runtime.py"]
 model = dict(
-    backbone=dict(patch_size=(2, 4, 4), drop_path_rate=0.1),
+    backbone=dict(patch_size=(2, 4, 4), drop_path_rate=0.1, pretrained2d=False),
     test_cfg=dict(max_testing_views=4),
 )
 
@@ -115,7 +116,7 @@ find_unused_parameters = False
 fp16 = None
 optimizer_config = dict(
     type="DistOptimizerHook",
-    update_interval=4,
+    update_interval=8,
     grad_clip=None,
     coalesce=True,
     bucket_size_mb=-1,
