@@ -8,8 +8,8 @@ model = dict(
 
 # dataset settings
 dataset_type = "VideoDataset"
-data_root = "data/papadamou/videos"
-data_root_val = "data/papadamou/videos"
+data_root = "data/papadamou"
+data_root_val = "data/papadamou"
 ann_file_train = "data/papadamou/papadamou_train_list_videos.txt"
 ann_file_val = "data/papadamou/papadamou_val_list_videos.txt"
 ann_file_test = "data/papadamou/papadamou_val_list_videos.txt"
