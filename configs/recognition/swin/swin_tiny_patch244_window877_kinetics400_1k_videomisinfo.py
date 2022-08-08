@@ -58,7 +58,7 @@ test_pipeline = [
     dict(type="ToTensor", keys=["imgs"]),
 ]
 data = dict(
-    videos_per_gpu=8,
+    videos_per_gpu=1,
     workers_per_gpu=4,
     val_dataloader=dict(videos_per_gpu=1, workers_per_gpu=1),
     test_dataloader=dict(videos_per_gpu=1, workers_per_gpu=1),
@@ -117,7 +117,7 @@ find_unused_parameters = False
 fp16 = None
 optimizer_config = dict(
     type="DistOptimizerHook",
-    update_interval=8,
+    update_interval=1,
     grad_clip=None,
     coalesce=True,
     bucket_size_mb=-1,
