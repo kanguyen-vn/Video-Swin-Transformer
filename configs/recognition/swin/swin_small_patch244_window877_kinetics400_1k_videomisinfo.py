@@ -107,7 +107,6 @@ total_epochs = 30
 
 # runtime settings
 checkpoint_config = dict(interval=1)
-work_dir = './work_dirs/k400_swin_small_patch244_window877.py'
 find_unused_parameters = False
 
 
