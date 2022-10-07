@@ -18,7 +18,7 @@ img_norm_cfg = dict(
 )
 train_pipeline = [
     dict(type="DecordInit"),
-    dict(type="SampleFrames", clip_len=32, frame_interval=2, num_clips=1),
+    dict(type="SampleFrames", clip_len=32, frame_interval=30, num_clips=1),
     dict(type="DecordDecode"),
     dict(type="Resize", scale=(-1, 256)),
     dict(type="RandomResizedCrop"),
@@ -32,7 +32,7 @@ train_pipeline = [
 val_pipeline = [
     dict(type="DecordInit"),
     dict(
-        type="SampleFrames", clip_len=32, frame_interval=2, num_clips=1, test_mode=True
+        type="SampleFrames", clip_len=32, frame_interval=30, num_clips=1, test_mode=True
     ),
     dict(type="DecordDecode"),
     dict(type="Resize", scale=(-1, 256)),
@@ -46,7 +46,7 @@ val_pipeline = [
 test_pipeline = [
     dict(type="DecordInit"),
     dict(
-        type="SampleFrames", clip_len=32, frame_interval=2, num_clips=4, test_mode=True
+        type="SampleFrames", clip_len=32, frame_interval=30, num_clips=4, test_mode=True
     ),
     dict(type="DecordDecode"),
     dict(type="Resize", scale=(-1, 224)),
@@ -86,7 +86,7 @@ evaluation = dict(interval=5, metrics=["top_k_accuracy", "mean_class_accuracy"])
 # optimizer
 optimizer = dict(
     type="AdamW",
-    lr=1e-3,
+    lr=0.00003125,
     betas=(0.9, 0.999),
     weight_decay=0.02,
     paramwise_cfg=dict(
