@@ -269,12 +269,19 @@ class SampleFrames:
             start_index = results["start_index"]
             frame_inds = np.concatenate(frame_inds) + start_index
 
-        print(results)
-
         results["frame_inds"] = frame_inds.astype(np.int)
         results["clip_len"] = self.clip_len
         results["frame_interval"] = self.frame_interval
         results["num_clips"] = self.num_clips
+
+        from pathlib import Path
+
+        filepath = Path(results["filename"])
+        frame_inds_path = filepath.parent.parent / "frame_inds"
+        frame_inds_path.mkdir(exist_ok=True)
+        with open(frame_inds_path / (filepath.stem) + ".txt", "w") as f:
+            f.write(results["frame_inds"])
+
         return results
 
     def __repr__(self):
