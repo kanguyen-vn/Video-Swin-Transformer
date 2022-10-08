@@ -20,29 +20,6 @@ try:
         def __init__(self, *args, save_best="auto", **kwargs):
             super().__init__(*args, save_best=save_best, **kwargs)
 
-        def after_train_iter(self, runner):
-            """Called after every training iter to evaluate the results."""
-            from mmcv.runner import LoggerHook
-
-            if not self.by_epoch and self._should_evaluate(runner):
-                # Because the priority of EvalHook is higher than LoggerHook, the
-                # training log and the evaluating log are mixed. Therefore,
-                # we need to dump the training log and clear it before evaluating
-                # log is generated. In addition, this problem will only appear in
-                # `IterBasedRunner` whose `self.by_epoch` is False, because
-                # `EpochBasedRunner` whose `self.by_epoch` is True calls
-                # `_do_evaluate` in `after_train_epoch` stage, and at this stage
-                # the training log has been printed, so it will not cause any
-                # problem. more details at
-                # https://github.com/open-mmlab/mmsegmentation/issues/694
-                for hook in runner._hooks:
-                    if isinstance(hook, LoggerHook):
-                        hook.after_train_iter(runner)
-                runner.log_buffer.clear()
-                print("lord hammercy")
-
-                self._do_evaluate(runner)
-
     class DistEvalHook(BasicDistEvalHook):
         greater_keys = ["acc", "top", "AR@", "auc", "precision", "mAP@", "Recall@"]
         less_keys = ["loss"]
