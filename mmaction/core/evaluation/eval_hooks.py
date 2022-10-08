@@ -198,13 +198,11 @@ if not from_mmcv:
             """Called after every training iter to evaluate the results."""
             if not self.by_epoch:
                 self._do_evaluate(runner)
-            print("after train iter")
 
         def after_train_epoch(self, runner):
             """Called after every training epoch to evaluate the results."""
             if self.by_epoch:
                 self._do_evaluate(runner)
-            print("after train epoch")
 
         def _do_evaluate(self, runner):
             """perform evaluation and save ckpt."""
