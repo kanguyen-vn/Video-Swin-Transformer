@@ -39,6 +39,7 @@ try:
                     if isinstance(hook, LoggerHook):
                         hook.after_train_iter(runner)
                 runner.log_buffer.clear()
+                print("lord hammercy")
 
                 self._do_evaluate(runner)
 
