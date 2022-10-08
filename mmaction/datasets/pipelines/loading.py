@@ -281,7 +281,8 @@ class SampleFrames:
         frame_inds_path.mkdir(exist_ok=True)
         np.savetxt(
             frame_inds_path / (filepath.stem + ".txt"),
-            results["frame_inds"],
+            results["frame_inds"].astype(int),
+            fmt=r"%i",
             delimiter=",",
         )
 
