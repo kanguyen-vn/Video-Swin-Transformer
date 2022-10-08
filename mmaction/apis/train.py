@@ -212,7 +212,6 @@ def train_model(
     runner_kwargs = dict()
     if cfg.omnisource:
         runner_kwargs = dict(train_ratio=train_ratio)
-    print(runner.hooks)
     runner.run(data_loaders, cfg.workflow, cfg.total_epochs, **runner_kwargs)
 
     if test["test_last"] or test["test_best"]:

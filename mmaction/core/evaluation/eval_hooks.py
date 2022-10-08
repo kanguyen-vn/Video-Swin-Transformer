@@ -14,27 +14,25 @@ try:
     from_mmcv = True
 
     class EvalHook(BasicEvalHook):
-        greater_keys = [
-            'acc', 'top', 'AR@', 'auc', 'precision', 'mAP@', 'Recall@'
-        ]
-        less_keys = ['loss']
+        greater_keys = ["acc", "top", "AR@", "auc", "precision", "mAP@", "Recall@"]
+        less_keys = ["loss"]
 
-        def __init__(self, *args, save_best='auto', **kwargs):
+        def __init__(self, *args, save_best="auto", **kwargs):
             super().__init__(*args, save_best=save_best, **kwargs)
 
     class DistEvalHook(BasicDistEvalHook):
-        greater_keys = [
-            'acc', 'top', 'AR@', 'auc', 'precision', 'mAP@', 'Recall@'
-        ]
-        less_keys = ['loss']
+        greater_keys = ["acc", "top", "AR@", "auc", "precision", "mAP@", "Recall@"]
+        less_keys = ["loss"]
 
-        def __init__(self, *args, save_best='auto', **kwargs):
+        def __init__(self, *args, save_best="auto", **kwargs):
             super().__init__(*args, save_best=save_best, **kwargs)
 
 except (ImportError, ModuleNotFoundError):
-    warnings.warn('DeprecationWarning: EvalHook and DistEvalHook in mmaction2 '
-                  'will be deprecated, please install mmcv through master '
-                  'branch.')
+    warnings.warn(
+        "DeprecationWarning: EvalHook and DistEvalHook in mmaction2 "
+        "will be deprecated, please install mmcv through master "
+        "branch."
+    )
     from_mmcv = False
 
 if not from_mmcv:
@@ -82,43 +80,47 @@ if not from_mmcv:
                 of the dataset.
         """
 
-        rule_map = {'greater': lambda x, y: x > y, 'less': lambda x, y: x < y}
-        init_value_map = {'greater': -inf, 'less': inf}
-        greater_keys = [
-            'acc', 'top', 'AR@', 'auc', 'precision', 'mAP@', 'Recall@'
-        ]
-        less_keys = ['loss']
+        rule_map = {"greater": lambda x, y: x > y, "less": lambda x, y: x < y}
+        init_value_map = {"greater": -inf, "less": inf}
+        greater_keys = ["acc", "top", "AR@", "auc", "precision", "mAP@", "Recall@"]
+        less_keys = ["loss"]
 
-        def __init__(self,
-                     dataloader,
-                     start=None,
-                     interval=1,
-                     by_epoch=True,
-                     save_best='auto',
-                     rule=None,
-                     **eval_kwargs):
+        def __init__(
+            self,
+            dataloader,
+            start=None,
+            interval=1,
+            by_epoch=True,
+            save_best="auto",
+            rule=None,
+            **eval_kwargs,
+        ):
 
-            if 'key_indicator' in eval_kwargs:
+            if "key_indicator" in eval_kwargs:
                 raise RuntimeError(
                     '"key_indicator" is deprecated, '
                     'you need to use "save_best" instead. '
-                    'See https://github.com/open-mmlab/mmaction2/pull/395 '
-                    'for more info')
+                    "See https://github.com/open-mmlab/mmaction2/pull/395 "
+                    "for more info"
+                )
 
             if not isinstance(dataloader, DataLoader):
-                raise TypeError(f'dataloader must be a pytorch DataLoader, '
-                                f'but got {type(dataloader)}')
+                raise TypeError(
+                    f"dataloader must be a pytorch DataLoader, "
+                    f"but got {type(dataloader)}"
+                )
 
             if interval <= 0:
-                raise ValueError(
-                    f'interval must be positive, but got {interval}')
+                raise ValueError(f"interval must be positive, but got {interval}")
 
             assert isinstance(by_epoch, bool)
 
             if start is not None and start < 0:
                 warnings.warn(
-                    f'The evaluation start epoch {start} is smaller than 0, '
-                    f'use 0 instead', UserWarning)
+                    f"The evaluation start epoch {start} is smaller than 0, "
+                    f"use 0 instead",
+                    UserWarning,
+                )
                 start = 0
             self.dataloader = dataloader
             self.interval = interval
@@ -143,20 +145,22 @@ if not from_mmcv:
                     comparison rule.
             """
             if rule not in self.rule_map and rule is not None:
-                raise KeyError(f'rule must be greater, less or None, '
-                               f'but got {rule}.')
+                raise KeyError(
+                    f"rule must be greater, less or None, " f"but got {rule}."
+                )
 
             if rule is None:
-                if key_indicator != 'auto':
+                if key_indicator != "auto":
                     if any(key in key_indicator for key in self.greater_keys):
-                        rule = 'greater'
+                        rule = "greater"
                     elif any(key in key_indicator for key in self.less_keys):
-                        rule = 'less'
+                        rule = "less"
                     else:
                         raise ValueError(
-                            f'Cannot infer the rule for key '
-                            f'{key_indicator}, thus a specific rule '
-                            f'must be specified.')
+                            f"Cannot infer the rule for key "
+                            f"{key_indicator}, thus a specific rule "
+                            f"must be specified."
+                        )
             self.rule = rule
             self.key_indicator = key_indicator
             if self.rule is not None:
@@ -165,9 +169,9 @@ if not from_mmcv:
         def before_run(self, runner):
             if self.save_best is not None:
                 if runner.meta is None:
-                    warnings.warn('runner.meta is None. Creating a empty one.')
+                    warnings.warn("runner.meta is None. Creating a empty one.")
                     runner.meta = dict()
-                runner.meta.setdefault('hook_msgs', dict())
+                runner.meta.setdefault("hook_msgs", dict())
 
         def before_train_iter(self, runner):
             """Evaluate the model only at the start of training by
@@ -194,11 +198,13 @@ if not from_mmcv:
             """Called after every training iter to evaluate the results."""
             if not self.by_epoch:
                 self._do_evaluate(runner)
+            print("after train iter")
 
         def after_train_epoch(self, runner):
             """Called after every training epoch to evaluate the results."""
             if self.by_epoch:
                 self._do_evaluate(runner)
+            print("after train epoch")
 
         def _do_evaluate(self, runner):
             """perform evaluation and save ckpt."""
@@ -206,6 +212,7 @@ if not from_mmcv:
                 return
 
             from mmaction.apis import single_gpu_test
+
             results = single_gpu_test(runner.model, self.dataloader)
             key_score = self.evaluate(runner, results)
             if self.save_best:
@@ -240,32 +247,34 @@ if not from_mmcv:
 
         def _save_ckpt(self, runner, key_score):
             if self.by_epoch:
-                current = f'epoch_{runner.epoch + 1}'
-                cur_type, cur_time = 'epoch', runner.epoch + 1
+                current = f"epoch_{runner.epoch + 1}"
+                cur_type, cur_time = "epoch", runner.epoch + 1
             else:
-                current = f'iter_{runner.iter + 1}'
-                cur_type, cur_time = 'iter', runner.iter + 1
+                current = f"iter_{runner.iter + 1}"
+                cur_type, cur_time = "iter", runner.iter + 1
 
-            best_score = runner.meta['hook_msgs'].get(
-                'best_score', self.init_value_map[self.rule])
+            best_score = runner.meta["hook_msgs"].get(
+                "best_score", self.init_value_map[self.rule]
+            )
             if self.compare_func(key_score, best_score):
                 best_score = key_score
-                runner.meta['hook_msgs']['best_score'] = best_score
+                runner.meta["hook_msgs"]["best_score"] = best_score
 
                 if self.best_ckpt_path and osp.isfile(self.best_ckpt_path):
                     os.remove(self.best_ckpt_path)
 
-                best_ckpt_name = f'best_{self.key_indicator}_{current}.pth'
+                best_ckpt_name = f"best_{self.key_indicator}_{current}.pth"
                 runner.save_checkpoint(
-                    runner.work_dir, best_ckpt_name, create_symlink=False)
+                    runner.work_dir, best_ckpt_name, create_symlink=False
+                )
                 self.best_ckpt_path = osp.join(runner.work_dir, best_ckpt_name)
 
-                runner.meta['hook_msgs']['best_ckpt'] = self.best_ckpt_path
+                runner.meta["hook_msgs"]["best_ckpt"] = self.best_ckpt_path
+                runner.logger.info(f"Now best checkpoint is saved as {best_ckpt_name}.")
                 runner.logger.info(
-                    f'Now best checkpoint is saved as {best_ckpt_name}.')
-                runner.logger.info(
-                    f'Best {self.key_indicator} is {best_score:0.4f} '
-                    f'at {cur_time} {cur_type}.')
+                    f"Best {self.key_indicator} is {best_score:0.4f} "
+                    f"at {cur_time} {cur_type}."
+                )
 
         def evaluate(self, runner, results):
             """Evaluate the results.
@@ -275,12 +284,13 @@ if not from_mmcv:
                 results (list): Output results.
             """
             eval_res = self.dataloader.dataset.evaluate(
-                results, logger=runner.logger, **self.eval_kwargs)
+                results, logger=runner.logger, **self.eval_kwargs
+            )
             for name, val in eval_res.items():
                 runner.log_buffer.output[name] = val
             runner.log_buffer.ready = True
             if self.save_best is not None:
-                if self.key_indicator == 'auto':
+                if self.key_indicator == "auto":
                     # infer from eval_results
                     self._init_rule(self.rule, list(eval_res.keys())[0])
                 return eval_res[self.key_indicator]
@@ -331,17 +341,19 @@ if not from_mmcv:
                 of the dataset.
         """
 
-        def __init__(self,
-                     dataloader,
-                     start=None,
-                     interval=1,
-                     by_epoch=True,
-                     save_best='auto',
-                     rule=None,
-                     broadcast_bn_buffer=True,
-                     tmpdir=None,
-                     gpu_collect=False,
-                     **eval_kwargs):
+        def __init__(
+            self,
+            dataloader,
+            start=None,
+            interval=1,
+            by_epoch=True,
+            save_best="auto",
+            rule=None,
+            broadcast_bn_buffer=True,
+            tmpdir=None,
+            gpu_collect=False,
+            **eval_kwargs,
+        ):
             super().__init__(
                 dataloader,
                 start=start,
@@ -349,7 +361,8 @@ if not from_mmcv:
                 by_epoch=by_epoch,
                 save_best=save_best,
                 rule=rule,
-                **eval_kwargs)
+                **eval_kwargs,
+            )
             self.broadcast_bn_buffer = broadcast_bn_buffer
             self.tmpdir = tmpdir
             self.gpu_collect = gpu_collect
@@ -364,8 +377,7 @@ if not from_mmcv:
             if self.broadcast_bn_buffer:
                 model = runner.model
                 for _, module in model.named_modules():
-                    if isinstance(module,
-                                  _BatchNorm) and module.track_running_stats:
+                    if isinstance(module, _BatchNorm) and module.track_running_stats:
                         dist.broadcast(module.running_var, 0)
                         dist.broadcast(module.running_mean, 0)
 
@@ -373,17 +385,19 @@ if not from_mmcv:
                 return
 
             from mmaction.apis import multi_gpu_test
+
             tmpdir = self.tmpdir
             if tmpdir is None:
-                tmpdir = osp.join(runner.work_dir, '.eval_hook')
+                tmpdir = osp.join(runner.work_dir, ".eval_hook")
 
             results = multi_gpu_test(
                 runner.model,
                 self.dataloader,
                 tmpdir=tmpdir,
-                gpu_collect=self.gpu_collect)
+                gpu_collect=self.gpu_collect,
+            )
             if runner.rank == 0:
-                print('\n')
+                print("\n")
                 key_score = self.evaluate(runner, results)
 
                 if self.save_best:
