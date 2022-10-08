@@ -212,6 +212,7 @@ if not from_mmcv:
             from mmaction.apis import single_gpu_test
 
             results = single_gpu_test(runner.model, self.dataloader)
+            print(results)
             key_score = self.evaluate(runner, results)
             if self.save_best:
                 self._save_ckpt(runner, key_score)
