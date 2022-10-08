@@ -98,7 +98,6 @@ def top_k_accuracy(scores, labels, topk=(1,)):
         max_k_preds = np.argsort(scores, axis=1)[:, -k:][:, ::-1]
         match_array = np.logical_or.reduce(max_k_preds == labels, axis=1)
         topk_acc_score = match_array.sum() / match_array.shape[0]
-        print(f"{match_array.sum()}, {match_array.shape[0]}")
         res.append(topk_acc_score)
 
     return res
