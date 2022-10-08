@@ -160,7 +160,8 @@ def main():
         cfg.model, train_cfg=cfg.get("train_cfg"), test_cfg=cfg.get("test_cfg")
     )
 
-    print(model)
+    print(len(model.layers))
+    print(model.num_layers)
     import sys
 
     sys.exit(0)
