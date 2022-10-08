@@ -221,7 +221,6 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
                     topk = (topk,)
 
                 top_k_acc = top_k_accuracy(results, gt_labels, topk)
-                print(f"len(gt_labels)={len(gt_labels)}")
                 log_msg = []
                 for k, acc in zip(topk, top_k_acc):
                     eval_results[f"top{k}_acc"] = acc
