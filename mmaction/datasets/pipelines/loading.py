@@ -279,8 +279,11 @@ class SampleFrames:
         filepath = Path(results["filename"])
         frame_inds_path = filepath.parent.parent / "frame_inds"
         frame_inds_path.mkdir(exist_ok=True)
-        with open(frame_inds_path / (filepath.stem + ".txt"), "w") as f:
-            f.write(results["frame_inds"])
+        np.savetxt(
+            frame_inds_path / (filepath.stem + ".txt"),
+            results["frame_inds"],
+            delimiter=",",
+        )
 
         return results
 
