@@ -274,17 +274,17 @@ class SampleFrames:
         results["frame_interval"] = self.frame_interval
         results["num_clips"] = self.num_clips
 
-        # from pathlib import Path
+        from pathlib import Path
 
-        # filepath = Path(results["filename"])
-        # frame_inds_path = filepath.parent.parent / "frame_inds"
-        # frame_inds_path.mkdir(exist_ok=True)
-        # np.savetxt(
-        #     frame_inds_path / (filepath.stem + ".txt"),
-        #     results["frame_inds"].astype(int),
-        #     fmt=r"%i",
-        #     delimiter=",",
-        # )
+        filepath = Path(results["filename"])
+        frame_inds_path = filepath.parent.parent / "frame_inds"
+        frame_inds_path.mkdir(exist_ok=True)
+        np.savetxt(
+            frame_inds_path / (filepath.stem + ".txt"),
+            results["frame_inds"].astype(int),
+            fmt=r"%i",
+            delimiter=",",
+        )
 
         return results
 
