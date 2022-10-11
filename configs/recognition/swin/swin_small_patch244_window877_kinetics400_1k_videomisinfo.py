@@ -2,7 +2,7 @@
 _base_ = [
     '../../_base_/models/swin/swin_small.py', '../../_base_/default_runtime.py'
 ]
-model=dict(backbone=dict(patch_size=(2,4,4), drop_path_rate=0.1, pretrained2d=False), test_cfg=dict(max_testing_views=4), cls_head=dict(num_classes=2))
+model=dict(backbone=dict(patch_size=(2,4,4), drop_path_rate=0.1, pretrained2d=False, frozen_stages=4), test_cfg=dict(max_testing_views=4), cls_head=dict(num_classes=2))
 
 # dataset settings
 dataset_type = "VideoDataset"
@@ -15,7 +15,7 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
 train_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SampleFrames', clip_len=32, frame_interval=2, num_clips=1),
+    dict(type='SampleFrames', clip_len=32, frame_interval=30, num_clips=1),
     dict(type='DecordDecode'),
     dict(type='Resize', scale=(-1, 256)),
     dict(type='RandomResizedCrop'),
@@ -31,7 +31,7 @@ val_pipeline = [
     dict(
         type='SampleFrames',
         clip_len=32,
-        frame_interval=2,
+        frame_interval=30,
         num_clips=1,
         test_mode=True),
     dict(type='DecordDecode'),
@@ -48,7 +48,7 @@ test_pipeline = [
     dict(
         type='SampleFrames',
         clip_len=32,
-        frame_interval=2,
+        frame_interval=30,
         num_clips=4,
         test_mode=True),
     dict(type='DecordDecode'),
@@ -90,7 +90,7 @@ evaluation = dict(
     interval=5, metrics=['top_k_accuracy', 'mean_class_accuracy'])
 
 # optimizer
-optimizer = dict(type='AdamW', lr=1e-3, betas=(0.9, 0.999), weight_decay=0.02,
+optimizer = dict(type='AdamW', lr=0.00003125, betas=(0.9, 0.999), weight_decay=0.02,
                  paramwise_cfg=dict(custom_keys={'absolute_pos_embed': dict(decay_mult=0.),
                                                  'relative_position_bias_table': dict(decay_mult=0.),
                                                  'norm': dict(decay_mult=0.),
